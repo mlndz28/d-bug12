@@ -1,0 +1,18 @@
+#!/bin/bash
+
+PY=python  # path to your version binary (works with either python 2 or 3) 
+
+if [[ $EUID -ne 0 ]]; then
+   echo "Please run this script as root." 1>&2
+   exit 1
+fi
+
+rm -f /usr/local/bin/dbug12
+
+if hash python 2>/dev/null; then
+   python_path=$($PY -c 'import sys;print([p for p in sys.path if p != ""][0])')
+   rm -f $python_path/dbug12.*
+fi
+
+echo dbug12 has been uninstalled successfully
+

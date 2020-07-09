@@ -1,0 +1,26 @@
+#!/bin/bash
+
+PY=python  # path to your version's binary (works with either python 2 or 3) 
+
+if [[ $EUID -ne 0 ]]; then
+   echo "Please run this script as root." 1>&2
+   exit 1
+fi
+
+if ! hash $PY 2>/dev/null; then
+    echo "Python is needed to run the installer."
+    exit 1
+fi
+
+if ! $PY -c "import serial"; then
+    echo "pySerial is needed for the program to work."
+    exit 1
+fi
+
+cp dbug12/cli.py /usr/local/bin/dbug12
+chmod +x /usr/local/bin/dbug12
+
+python_path=$($PY -c 'import sys;print([p for p in sys.path if p != ""][0])')
+cp dbug12/debugger.py $python_path/dbug12.py
+
+echo dbug12 has been installed successfully
