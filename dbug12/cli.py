@@ -13,7 +13,7 @@ def main():
 		'run': {
 			'description':'Start execution from a specific point of memory',
 			'args':[
-				{'name':'addr', 'meta':'<address>','description':'Execution start address (hexadecimal)','nargs':1}
+				{'name':'addr', 'meta':'<address>','description':'Execution start address (hexadecimal). Default value: registers.pc','nargs':'?'}
 			]},
 		'get-memory': {
 			'description':'Display a section of memory',
@@ -66,7 +66,10 @@ def main():
 	
 	elif args.command == 'run':
 		deb = Debugger(args.port)
-		start = int(subargs.addr[0],16)
+		if subargs.addr:
+			start = int(subargs.addr[0],16)
+		else:
+			start = deb.get_registers().pc
 		print('Executing at 0x%x'%start)
 		regs,serial_output = deb.run(start)
 		if serial_output: 

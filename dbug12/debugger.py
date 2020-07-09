@@ -54,8 +54,8 @@ class Debugger(object):
 		if 'invalid' in output:
 			raise Exception('Invalid program binary')
 
-	def run(self, start):
-		self._write('g %x\r\n'%start)
+	def run(self, start=None):
+		self._write('g %x\r\n'%start if start else 'g \r\n')
 		raw = self._read_batch()
 		serial_output = re.split(r"g .*\n",raw)
 		if(len(serial_output)>1):
