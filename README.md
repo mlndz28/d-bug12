@@ -26,10 +26,10 @@ dbug12 [flags] <command>
 ```
 
 ```
-usage: cli.py [-h] [-p PORT] <command> ...
+usage: dbug12 [-h] [-p PORT] <command> ...
 
 positional arguments:
-  <command>             cli.py <command> -h will show further usage and
+  <command>             dbug12 <command> -h will show further usage and
                         arguments, if any. Available commands are:
 
     load                Load a compiled program into memory
