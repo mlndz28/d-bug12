@@ -16,7 +16,7 @@ class Debugger(object):
 		except serial.SerialException:
 			raise Exception("No board found. Please make sure it's connected and that you have permissions to read and write at '%s'"%port )
 		self.memory = {}
-	
+
 	def __getattribute__(self, item):
 		if item[:1] != '_' and callable(object.__getattribute__(self, item)):
 			if not self.writtable:
@@ -46,7 +46,7 @@ class Debugger(object):
 
 
 	def load(self, program):
-		if program[:3] != 'S01': 
+		if program[:3] != 'S01':
 			raise Exception('Invalid program binary')
 		self._write('load\r\n')
 		self._write(program)
@@ -62,19 +62,19 @@ class Debugger(object):
 			serial_output = re.split(r"User Bkpt|Trap Instruction|User Program",serial_output[-1])[0]
 		else:
 			serial_output = ''
-		try: 
+		try:
 			return self._parse_registers(raw), serial_output
 		except:
 			return None, serial_output
-		
+
 	def read_memory(self, start, end=None):
-		if end and start > end: 
+		if end and start > end:
 			start,end = end,start
 		command =  ' md %x %x\r\n'%(start,end) if end else ' md %x\r\n'%start
 		self._write(command)
 		raw = self._read_batch()
 		try: # parsing the command result
-			results = [ obj.groupdict() for obj in re.compile(r"(?P<addr>[0-9A-F]{4})\s+(?P<vals>([0-9A-F]{2}(\s|-)+)*)").finditer(raw) if obj.groupdict()['vals']!=''] 
+			results = [ obj.groupdict() for obj in re.compile(r"(?P<addr>[0-9A-F]{4})\s+(?P<vals>([0-9A-F]{2}(\s|-)+)*)").finditer(raw) if obj.groupdict()['vals']!='']
 			addr = int(results[0]['addr'],16)
 			for line in results:
 				vals = re.split(r"\s*-\s*|\s+",line['vals'])
@@ -82,22 +82,32 @@ class Debugger(object):
 					self.memory[addr] = int(val,16); addr += 1
 		except:
 			raise Exception("Wrong command response")
-		
+
 		return [self.memory[i] for i in range(start,end+1)] if end else self.memory[start]
 
 	def fill_memory(self, start, end=None, value=0):
-		if end and start > end: 
+		if end and start > end:
 			start,end = end,start
 		command =  ' bf %x %x %x\r\n'%(start,end,value) if end else ' bf %x %x %x\r\n'%(start,start,value)
 		self._write(command)
 		raw = self._read_batch().lower()
 		if 'data' in raw:
 			raise Exception('Value out of range (max 1 byte size)')
-	
+
 	def get_registers(self):
 		self._write('rd \r\n')
 		raw = self._read_batch()
 		return self._parse_registers(raw)
+
+	def do_command(self, command):
+		self._write('%s \r\n'%command)
+		raw = self._read_batch()
+		response = ''
+		try:
+			response = self._parse_registers(raw)
+		except Exception:
+			pass
+		return response
 
 	def _parse_registers(self, msg):
 		try: # parsing the command result
@@ -139,4 +149,4 @@ class Debugger(object):
 			return regs
 		except:
 			raise Exception("Wrong command response")
-		
+
