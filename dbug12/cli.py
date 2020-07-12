@@ -67,7 +67,7 @@ def main():
 	elif args.command == 'run':
 		deb = Debugger(args.port)
 		if subargs.addr:
-			start = int(subargs.addr[0],16)
+			start = int(subargs.addr,16)
 		else:
 			start = deb.get_registers().pc
 		print('Executing at 0x%x'%start)
