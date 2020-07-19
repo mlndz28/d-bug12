@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from dbug12 import Debugger
-import argparse, sys, runpy, os, serial.tools.miniterm
+import argparse, sys, os, serial.tools.miniterm
 
 def main():
 	commands = {

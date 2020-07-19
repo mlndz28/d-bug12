@@ -1,9 +1,8 @@
-import serial, sys, re, os
-import multiprocessing
+import serial, re, os
 import time
 from collections import namedtuple
 
-EXECUTION_TIMEOUT = 5
+EXECUTION_TIMEOUT = 10
 READ_TIMEOUT = 0.1
 COMMAND_WAIT = 0.1
 PORT = '/dev/ttyUSB0' if os.name == 'posix' else 'COM7'
@@ -59,7 +58,7 @@ class Debugger(object):
 		raw = self._read_batch()
 		serial_output = re.split(r"g .*\n",raw)
 		if(len(serial_output)>1):
-			serial_output = re.split(r"User Bkpt|Trap Instruction|User Program",serial_output[-1])[0]
+			serial_output = re.split(r"User Bkpt|Trap Instruction|User Program|.*Exception",serial_output[-1])[0]
 		else:
 			serial_output = ''
 		try:
