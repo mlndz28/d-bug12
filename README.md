@@ -11,12 +11,6 @@ pip install dbug12
 
 You should have Python's user base directory in your path for the CLI to work properly. In case it's not, use `python -m site --user-base` to get it and add it to your system path.
 
-### From source
-
-```bash
-pip install dbug12
-```
-
 ### Manually
 
 Although the recommended way to install is using Python's package installer, there is an installation script (Linux only) in case you don't have `pip` set up.

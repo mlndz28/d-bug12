@@ -3,7 +3,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 setuptools.setup(
      name='dbug12',  
-     version='0.1',
+     version='0.1.1',
      author="Fabian Melendez",
      author_email="fabian.melendez.a@gmail.com",
      description="Python API for D-Bug12 compatible boards",
