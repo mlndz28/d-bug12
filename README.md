@@ -33,9 +33,9 @@ positional arguments:
                         arguments, if any. Available commands are:
 
     load                Load a compiled program into memory
+    next-instruction    Run a single instruction (from current PC)
     run                 Start execution from a specific point of memory
-    monitor             Spawns a terminal that directly communicates with the
-                        board
+    monitor             Spawns a terminal that directly communicates with the board
     get-registers       Display CPU registers
     erase-memory        Erase a section of memory
     get-memory          Display a section of memory
