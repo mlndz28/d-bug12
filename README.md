@@ -1,3 +1,6 @@
+[![PyPI](https://img.shields.io/pypi/v/dbug12)](https://pypi.org/project/dbug12/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/dbug12)](https://pypi.org/project/dbug12/)
+
 `d-bug12` is both a Python api, and a command line interface for the Dbug-12 program flashed in Motorola's HC12 chips
 
 d-bug12
