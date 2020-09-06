@@ -101,12 +101,17 @@ class Debugger(object):
 	def do_command(self, command):
 		self._write('%s \r\n'%command)
 		raw = self._read_batch()
-		response = ''
+		serial_output = re.split(r"%s .*\n"%command,raw)
+		if(len(serial_output)>1):
+			serial_output = re.split(r"User Bkpt|Trap Instruction|User Program|.*Exception",serial_output[-1])[0]
+		else:
+			serial_output = ''
+		response = None
 		try:
 			response = self._parse_registers(raw)
 		except Exception:
 			pass
-		return response
+		return response, serial_output
 
 	def _parse_registers(self, msg):
 		try: # parsing the command result

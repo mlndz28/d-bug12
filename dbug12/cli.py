@@ -15,6 +15,9 @@ def main():
 			'args':[
 				{'name':'addr', 'meta':'<address>','description':'Execution start address (hexadecimal). Default value: registers.pc','nargs':'?'}
 			]},
+		'next-instruction': {
+			'description':'Run a single instruction (from current PC)',
+			},
 		'get-memory': {
 			'description':'Display a section of memory',
 			'args':[
@@ -78,7 +81,15 @@ def main():
 			print("Execution stopped")
 			print_regs(regs)
 
+	elif args.command == 'next-instruction':
+		deb = Debugger(args.port)
+		regs,_ = deb.do_command('t')
+		if regs:
+			print("Execution stopped")
+			print_regs(regs)
+
 	elif args.command == 'monitor':
+		print('\n\tEnter HELP for a command summary\n')
 		sys.argv[1:] = ['--eol','cr']
 		serial.tools.miniterm.main(default_port=port)
 	
@@ -92,7 +103,7 @@ def main():
 	
 	elif args.command == 'erase-memory':
 		Debugger(port).fill_memory(int(subargs.start[0],16),end=int(subargs.end,16) if subargs.end else None,value=int(args.value,16))
-
+	
 
 def print_regs(regs):
 	print('')
