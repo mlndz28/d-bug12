@@ -3,14 +3,14 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 setuptools.setup(
      name='dbug12',  
-     version='0.1.2',
+     version='0.2.0',
      author="Fabian Melendez",
      author_email="fabian.melendez.a@gmail.com",
      description="Python API for D-Bug12 compatible boards",
      long_description=long_description,
      long_description_content_type="text/markdown",
      url="https://github.com/mlndz28/d-bug12",
-     download_url="https://github.com/mlndz28/d-bug12/archive/v0.1.tar.gz",
+     download_url="https://github.com/mlndz28/d-bug12/archive/v0.2.0.tar.gz",
      keywords = ['D-Bug12', 'HCS12', 'Dragon12', 'cli', 'api'],
      install_requires=["pyserial"],
      packages=setuptools.find_packages(),

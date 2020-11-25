@@ -24,6 +24,12 @@ def main():
 				{'name':'start', 'meta':'<start>','description':'Address (in hexadecimal representation) at which to start the read','nargs':1},
 				{'name':'end', 'meta':'<end>','description':'Address (in hexadecimal representation) at which to end the read. Optional parameter, leaving this empty will return only one byte from memory','nargs':'?'}
 			]},
+		'write-memory': {
+			'description':'Write an array of bytes to a section of memory',
+			'args':[
+				{'name':'address', 'meta':'<start>','description':'Start address (in hexadecimal representation) where the array will be written ','nargs':1},
+				{'name':'values', 'meta':'[values]','description':'Data array.','nargs':'+'}
+			]},
 		'erase-memory': {
 			'description':'Erase a section of memory',
 			'args':[
@@ -101,8 +107,13 @@ def main():
 		for i in range(len(mem)):
 			print("\t0x%04X:\t0x%02X"%(int(subargs.start[0],16)+i,mem[i]))
 	
+	elif args.command == 'write-memory':
+		print("address: ", int(subargs.address[0],16))
+		print("values: ", [int(v,16) for v in subargs.values])
+		Debugger(args.port).write_memory(int(subargs.address[0],16),[int(v,16) for v in subargs.values])
+	
 	elif args.command == 'erase-memory':
-		Debugger(port).fill_memory(int(subargs.start[0],16),end=int(subargs.end,16) if subargs.end else None,value=int(args.value,16))
+		Debugger(args.port).fill_memory(int(subargs.start[0],16),end=int(subargs.end,16) if subargs.end else None,value=int(args.value,16))
 	
 
 def print_regs(regs):

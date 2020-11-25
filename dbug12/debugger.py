@@ -5,6 +5,7 @@ from collections import namedtuple
 EXECUTION_TIMEOUT = 10
 READ_TIMEOUT = 0.1
 COMMAND_WAIT = 0.1
+CHARACTER_WAIT = 0.1
 PORT = '/dev/ttyUSB0' if os.name == 'posix' else 'COM7'
 
 class Debugger(object):
@@ -17,7 +18,7 @@ class Debugger(object):
 		self.memory = {}
 
 	def __getattribute__(self, item):
-		if item[:1] != '_' and callable(object.__getattribute__(self, item)):
+		if item[:1] != '_' and item != 'write_serial' and callable(object.__getattribute__(self, item)):
 			if not self.writtable:
 				raise Exception("Serial port is blocked since the cpu is still executing instructions. Either wait for it to finish, or restart the board if it's on a loop")
 
@@ -43,9 +44,14 @@ class Debugger(object):
 		self._serial_interface.write(msg.encode())
 		time.sleep(COMMAND_WAIT)
 
+	def write_serial(self,msg):
+		for c in msg:
+			self._serial_interface.write(c.encode())
+			time.sleep(CHARACTER_WAIT)
+
 
 	def load(self, program):
-		if program[:3] != 'S01':
+		if program[:2] != 'S0':
 			raise Exception('Invalid program binary')
 		self._write('load\r\n')
 		self._write(program)
@@ -83,6 +89,19 @@ class Debugger(object):
 			raise Exception("Wrong command response")
 
 		return [self.memory[i] for i in range(start,end+1)] if end else self.memory[start]
+
+	def write_memory(self, address, values):
+		self._write('mm %X'%address)
+		self._read_batch()
+		for v in values:
+			if v > 0xFF and v >= 0 :
+				self._write('.')
+				raise Exception("0x%X can't fit into a byte. Please submit a byte array"%v)
+			self._write('%X'%v)
+			self._read_batch()
+		self._write('.')
+
+
 
 	def fill_memory(self, start, end=None, value=0):
 		if end and start > end:
